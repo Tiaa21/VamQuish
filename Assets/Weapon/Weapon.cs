@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+ 
 public class Weapon : MonoBehaviour
 {
+    public bool isActiveWeapon;
+
     // Bullet
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
@@ -32,6 +34,20 @@ public class Weapon : MonoBehaviour
     public int magazineSize, bulletsLeft;
     public bool isReloading;
 
+    //Weapon Position
+    public Vector3 spawnPosition;
+    public Vector3 spawnRotation;
+
+    //Weapon Types
+
+    public enum WeaponModel
+    {
+        Glock19,
+        M4
+    }
+
+    public WeaponModel thisWeaponModel;
+
     public enum ShootingMode
     {
         Single,
@@ -52,51 +68,58 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-        switch (currentShootingMode)
+        if (isActiveWeapon)
         {
-            case ShootingMode.Auto:
-                isShooting = Input.GetKey(KeyCode.Mouse0);
-                break;
-
-            case ShootingMode.Single:
-            case ShootingMode.Burst:
-                isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-                break;
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
-        {
-            Reload();
-        }
-
-        if (readyToShoot && isShooting == false && isReloading == false && bulletsLeft <= 0)
-        {
-            Reload();
-        }
-
-        if (isShooting && readyToShoot && bulletsLeft > 0)
-        {
-            if (currentShootingMode == ShootingMode.Burst)
+            if (bulletsLeft == 0 && isShooting)
             {
-                FireBurst();
+                SoundManager.Instance.EmptySoundGlock19.Play();
             }
-            else if (currentShootingMode == ShootingMode.Auto)
+            switch (currentShootingMode)
             {
-                if (Time.time >= nextFireTime)
+                case ShootingMode.Auto:
+                    isShooting = Input.GetKey(KeyCode.Mouse0);
+                    break;
+    
+                case ShootingMode.Single:
+                case ShootingMode.Burst:
+                    isShooting = Input.GetKeyDown(KeyCode.Mouse0);
+                    break;
+            }
+    
+            if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
+            {
+                Reload();
+            }
+    
+            if (readyToShoot && isShooting == false && isReloading == false && bulletsLeft <= 0)
+            {
+                Reload();
+            }
+    
+            if (isShooting && readyToShoot && bulletsLeft > 0)
+            {
+                if (currentShootingMode == ShootingMode.Burst)
+                {
+                    FireBurst();
+                }
+                else if (currentShootingMode == ShootingMode.Auto)
+                {
+                    if (Time.time >= nextFireTime)
+                    {
+                        FireWeapon();
+                        nextFireTime = Time.time + shootingDelay;
+                    }
+                }
+                else
                 {
                     FireWeapon();
-                    nextFireTime = Time.time + shootingDelay;
                 }
             }
-            else
+    
+            if (AmmoManager.Instance.ammoDisplay != null && AmmoManager.Instance.ammoDisplay != null)
             {
-                FireWeapon();
+               AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft/bulletsPerBurst}/{magazineSize/bulletsPerBurst}";
             }
-        }
-
-        if (AmmoManager.Instance.ammoDisplay != null)
-        {
-           AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft/bulletsPerBurst}/{magazineSize/bulletsPerBurst}";
         }
     }
     
@@ -109,7 +132,7 @@ public class Weapon : MonoBehaviour
 
         animator.SetTrigger("Recoil");
 
-        SoundManager.Instance.shootingSoundGlock19.Play();
+        SoundManager.Instance.PlayShootingSound(thisWeaponModel);
 
         readyToShoot = false;
 
@@ -133,7 +156,12 @@ public class Weapon : MonoBehaviour
 
     private void Reload()
     {
+        SoundManager.Instance.PlayReloadSound(thisWeaponModel);
+
         isReloading = true;
+
+        animator.SetTrigger("Reload");
+
         Invoke("ReloadDone", reloadTime);
     }
 
