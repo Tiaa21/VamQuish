@@ -7,6 +7,9 @@ public class Weapon : MonoBehaviour
 {
     public bool isActiveWeapon;
 
+    //Weapon Damage
+    public int weaponDamage;
+
     // Bullet
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
@@ -73,6 +76,12 @@ public class Weapon : MonoBehaviour
     {
         if (isActiveWeapon)
         {
+
+            foreach (Transform child in transform)
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+
             GetComponent<Outline>().enabled = false;
             
             //Empty Mag
@@ -124,6 +133,13 @@ public class Weapon : MonoBehaviour
 
             
         }
+        else
+        {
+            foreach (Transform child in transform)
+            {
+                child.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+        }
     }
 
 
@@ -143,6 +159,9 @@ public class Weapon : MonoBehaviour
 
         // Spawn the bullet at the weapon's position
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+
+        Bullet bul = bullet.GetComponent<Bullet>();
+        bul.bulletDamage = weaponDamage;
 
         bullet.transform.forward = ShootingDirection;
 
