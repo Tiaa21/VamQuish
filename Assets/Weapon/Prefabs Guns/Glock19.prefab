@@ -4961,6 +4961,7 @@ GameObject:
   - component: {fileID: 3532123116831896561}
   - component: {fileID: 3268806832478221903}
   - component: {fileID: 6688019881148077237}
+  - component: {fileID: 8729500550022456781}
   m_Layer: 0
   m_Name: Glock19
   m_TagString: Untagged
@@ -4976,9 +4977,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6294033129257817946}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6899514, y: 0.67791945, z: -0.17784756, w: -0.18100403}
+  m_LocalRotation: {x: 0.6899509, y: 0.67792016, z: -0.17784578, w: -0.18100555}
   m_LocalPosition: {x: 124.328, y: 18.325, z: 198.37143}
-  m_LocalScale: {x: 2.4328043, y: 1.8427292, z: 1.7940036}
+  m_LocalScale: {x: 2.4328046, y: 1.8427293, z: 1.7940043}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4106377181160637084}
@@ -5050,13 +5051,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef26158dc6ba2a49bbec495fcca16d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActiveWeapon: 0
   bulletPrefab: {fileID: 4327077336143926574, guid: f827f2e62b9730b4c825c8d1a9b89c54, type: 3}
   bulletSpawn: {fileID: 3477860648682011610}
   bulletVelocity: 30
   bulletLifetime: 3
   isShooting: 0
   readyToShoot: 0
-  shootingDelay: 0.3
+  shootingDelay: 0.7
   muzzleEffect: {fileID: 2379819839635555346}
   bulletsPerBurst: 1
   spreadIntensity: 0.5
@@ -5076,7 +5078,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6294033129257817946}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6d43876e69e101846988e89202535164, type: 2}
   m_CullingMode: 0
@@ -5111,6 +5113,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.030453002, y: 0.13837616, z: 0.24765839}
   m_Center: {x: 0.00000000299816, y: -0.033188146, z: -0.026901932}
+--- !u!114 &8729500550022456781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6294033129257817946}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6869457314652692708
 GameObject:
   m_ObjectHideFlags: 0

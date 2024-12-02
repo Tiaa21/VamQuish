@@ -20,6 +20,13 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
+        if (collision.gameObject.CompareTag("Props"))
+        {
+            print("hit" + collision.gameObject.name + " !");
+            CreateBulletImpactEffect(collision);
+            Destroy(gameObject);
+        }
+
     }
 
     void CreateBulletImpactEffect(Collision objectWeHit)

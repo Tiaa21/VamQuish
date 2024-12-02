@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
- 
+
 public class Weapon : MonoBehaviour
 {
     public bool isActiveWeapon;
@@ -27,7 +27,7 @@ public class Weapon : MonoBehaviour
     public float spreadIntensity = 0.5f;
 
     //Animation
-    private Animator animator;
+    internal Animator animator;
 
     //Reloading
     public float reloadTime;
@@ -43,8 +43,11 @@ public class Weapon : MonoBehaviour
     public enum WeaponModel
     {
         Glock19,
-        M4
+        M4,
+        PumpJoti
     }
+
+    //Weapon Model
 
     public WeaponModel thisWeaponModel;
 
@@ -70,6 +73,9 @@ public class Weapon : MonoBehaviour
     {
         if (isActiveWeapon)
         {
+            GetComponent<Outline>().enabled = false;
+            
+            //Empty Mag
             if (bulletsLeft == 0 && isShooting)
             {
                 SoundManager.Instance.EmptySoundGlock19.Play();
@@ -79,23 +85,23 @@ public class Weapon : MonoBehaviour
                 case ShootingMode.Auto:
                     isShooting = Input.GetKey(KeyCode.Mouse0);
                     break;
-    
+
                 case ShootingMode.Single:
                 case ShootingMode.Burst:
                     isShooting = Input.GetKeyDown(KeyCode.Mouse0);
                     break;
             }
-    
+
             if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
             {
                 Reload();
             }
-    
+
             if (readyToShoot && isShooting == false && isReloading == false && bulletsLeft <= 0)
             {
                 Reload();
             }
-    
+
             if (isShooting && readyToShoot && bulletsLeft > 0)
             {
                 if (currentShootingMode == ShootingMode.Burst)
@@ -115,14 +121,11 @@ public class Weapon : MonoBehaviour
                     FireWeapon();
                 }
             }
-    
-            if (AmmoManager.Instance.ammoDisplay != null && AmmoManager.Instance.ammoDisplay != null)
-            {
-               AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft/bulletsPerBurst}/{magazineSize/bulletsPerBurst}";
-            }
+
+            
         }
     }
-    
+
 
     private void FireWeapon()
     {
@@ -136,8 +139,12 @@ public class Weapon : MonoBehaviour
 
         readyToShoot = false;
 
+        Vector3 ShootingDirection = CalculateDirectionAndSpread().normalized;
+
         // Spawn the bullet at the weapon's position
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+
+        bullet.transform.forward = ShootingDirection;
 
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb != null)
@@ -145,13 +152,34 @@ public class Weapon : MonoBehaviour
             Vector3 shootDirection = Camera.main.transform.forward;
             rb.AddForce(shootDirection * bulletVelocity, ForceMode.Impulse);
         }
-        else
-        {
-            Debug.LogError("Bullet prefab is missing a Rigidbody component!");
-        }
 
         StartCoroutine(DestroyBullet(bullet, bulletLifetime));
         Invoke("ResetShot", shootingDelay);
+    }
+
+    public Vector3 CalculateDirectionAndSpread()
+    {
+        //Shoot the bullet frm the middle of the screen/the crosshair
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(100);
+        }
+
+        Vector3 direction = targetPoint - bulletSpawn.position;
+
+        float x = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+        float y = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+
+        return direction + new Vector3(x, y, 0);
     }
 
     private void Reload()
