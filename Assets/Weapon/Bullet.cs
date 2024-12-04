@@ -28,9 +28,9 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collision.gameObject.CompareTag("Vampire"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<VampireSc>().TakeDamage(bulletDamage);
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(bulletDamage);
             Destroy(gameObject);
         }
     }

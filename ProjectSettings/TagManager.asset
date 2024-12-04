@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - Props
   - Vampire
+  - Enemy
+  - WayPoints
+  - VampireHand
   layers:
   - Default
   - TransparentFX
