@@ -7,41 +7,39 @@ public class Weapon : MonoBehaviour
 {
     public bool isActiveWeapon;
 
-    //Weapon Damage
+    [Header("Weapon Damage")]
     public int weaponDamage;
 
-    // Bullet
+    [Header("Bullet Settings")]
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public float bulletVelocity = 30f;
     public float bulletLifetime = 3f;
 
-    // Shoot
+    [Header("Shooting Settings")]
     public bool isShooting, readyToShoot;
     public float shootingDelay = 0.5f;
     private float nextFireTime;
     public GameObject muzzleEffect;
 
-    // Burst Type Weapon
+    [Header("Burst Type Settings")]
     public int bulletsPerBurst = 3;
     private int burstBulletLeft;
 
-    // Spread
+    [Header("Spread Settings")]
     public float spreadIntensity = 0.5f;
 
     //Animation
     internal Animator animator;
 
-    //Reloading
+    [Header("Reload Settings")]
     public float reloadTime;
     public int magazineSize, bulletsLeft;
     public bool isReloading;
 
-    //Weapon Position
+    [Header("Weapon Positions")]
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
-
-    //Weapon Types
 
     public enum WeaponModel
     {
@@ -49,8 +47,6 @@ public class Weapon : MonoBehaviour
         M4,
         PumpJoti
     }
-
-    //Weapon Model
 
     public WeaponModel thisWeaponModel;
 

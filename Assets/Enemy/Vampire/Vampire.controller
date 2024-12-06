@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopChasingDistance: 21
-  attackingDistance: 5
+  attackingDistance: 3
   chaseSpeed: 6
 --- !u!1102 &8353223857304242991
 AnimatorState:
